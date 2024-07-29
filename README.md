@@ -41,8 +41,9 @@ The model is trained in PyTorch and exported to ONNX.
 Then [onnx2c](https://github.com/kraiskil/onnx2c)
 is used to convert the model to a bunch of C code.
 The LSTM layers had become mainstream in recent years and are well
-supported in different frameworks. The model is small, so it might
-be possible to run it on Cortex-M4/M7, or ESP32 (future work).
+supported in different frameworks. ~~The model is small, so it might
+be possible to run it on Cortex-M4/M7, or ESP32 (future work).~~
+See below.
 
 ## Building
 
@@ -54,4 +55,19 @@ cd build
 cmake -DCMAKE_BUILD_TYPE=Release
 make
 ```
+
+## Running in embedded systems context (TinyML/EdgeML)
+
+This model was run on RP2040 and ESP32-S3.
+
+On RP2040 the inference alone takes ~2.4s with 240MHz clock, so
+it's not possible to run real-time. The feature extraction also
+takes significant time. A smaller ("narrower") model was also
+tested and still the inference took ~1.2s. This is still impressive
+taking into account that RP2040 is a Cortex-M0+ without FPU.
+
+On ESP32-S3 running at 240MHz inference with feature extraction
+takes ~0.5s, so running real-time is possible (e.g. every 750ms
+with 250ms overlap gives good results).
+
 

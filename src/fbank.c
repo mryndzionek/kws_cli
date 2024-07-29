@@ -1302,9 +1302,16 @@ static void powspec(const float input[FRAME_LEN], float output[NUM_FFT_BINS])
         fft_plan = fft_create_plan_radix2(NUM_FFT, in, out);
     }
 
-    for (size_t i = 0; i < FRAME_LEN; i++)
+    for (size_t i = 0; i < NUM_FFT; i++)
     {
-        in[i] = input[i];
+        if (i < FRAME_LEN)
+        {
+            in[i] = input[i];
+        }
+        else
+        {
+            in[i] = 0.0 + 0.0 * I;
+        }
     }
 
     fft_execute_radix2(fft_plan);
@@ -1382,8 +1389,8 @@ static const float LSTM4[1][1][32] = {{{0.0f}}};
 
 void fbank_speech_detect(float input[NUM_FRAMES][NUM_FILT], size_t *label, float *logit)
 {
-    float logits[9][6];
-    size_t max_idx;
+    float logits[9][NUM_LABELS];
+    size_t max_idx = 0;
     float max_log;
 
     for (size_t i = 0; i < NUM_FRAMES; i++)
@@ -1392,23 +1399,16 @@ void fbank_speech_detect(float input[NUM_FRAMES][NUM_FILT], size_t *label, float
     }
 
     entry(input, LSTM1, LSTM2, LSTM3, LSTM4, logits);
+    max_log = logits[0][0];
 
     for (size_t i = 0; i < 9; i++)
     {
-        for (size_t j = 0; j < 6; j++)
+        for (size_t j = 0; j < NUM_LABELS; j++)
         {
-            if ((i == 0) && (j == 0))
+            if (logits[i][j] > max_log)
             {
                 max_log = logits[i][j];
-                max_idx = 0;
-            }
-            else
-            {
-                if (logits[i][j] > max_log)
-                {
-                    max_log = logits[i][j];
-                    max_idx = j;
-                }
+                max_idx = j;
             }
         }
     }
