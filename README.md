@@ -25,6 +25,12 @@ Individual WAV files can piped (e.g. for testing) using:
 ```
 sox -S ../untitled.wav -t raw -c1 -e signed -b 16 -r16k - | ./kws_cli
 ```
+## Demo
+
+In the demo subdirectory there is a Python script showing how to
+use `kws_cli` for simple automation.
+
+https://github.com/user-attachments/assets/2a9eaa90-a0b9-4423-91c8-fd4df6bbc459
 
 ## More details
 
