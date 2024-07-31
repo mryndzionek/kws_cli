@@ -60,6 +60,9 @@ make
 
 This model was run on RP2040 and ESP32-S3.
 
+The model runs on a 1s window of sound samples, so feature extraction
+and inference must take less than that in order to run continuously.
+Preferably there should also be an overlap between successive windows.
 On RP2040 the inference alone takes ~2.4s with 240MHz clock, so
 it's not possible to run real-time. The feature extraction also
 takes significant time. A smaller ("narrower") model was also
@@ -69,5 +72,5 @@ taking into account that RP2040 is a Cortex-M0+ without FPU.
 On ESP32-S3 running at 240MHz inference with feature extraction
 takes ~0.5s, so running real-time is possible (e.g. every 750ms
 with 250ms overlap gives good results).
-
+A demo can be found [here](https://github.com/mryndzionek/esp32s3_eye_kws_demo).
 
